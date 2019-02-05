@@ -1,4 +1,4 @@
-set foldcolumn=2
+" set foldcolumn=2
 " set foldexpr=FoldPythonFuncdefs()
 " set foldtext=FoldTextGeneric()
 " setlocal foldmethod=expr
@@ -27,6 +27,17 @@ function! FoldSnakemake()
     return "="
   endif
 endfunction
+
+" {{{1
+function! RscriptFuncs()
+  let thisline = getline(v:lnum)
+  if match(thisline, 'function') >= 0
+    return ">1"
+  else
+    return "="
+  endif
+endfunction
+
 
 " {{{1
 function! FoldRmarkdown()

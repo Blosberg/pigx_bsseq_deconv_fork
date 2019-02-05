@@ -95,38 +95,27 @@ def list_files_sortbam(files, sampleID, protocol):
     else:
         raise Exception("=== ERROR: file list is neither 1 nor 2 in length. STOP! ===")
 
-def bam_processing(files, sampleID, protocol):
+def list_files_methylcalling(files, sampleID, protocol):
     PATH = DIR_methcall
     if len(files) == 1:
         return  PATH+sampleID+"_se_bt2.sorted" + dedupe_tag(protocol) + "_methylRaw.RDS" #---- single end
     elif len(files) == 2:
         return [PATH+sampleID+"_1_val_1_bt2.sorted" + dedupe_tag(protocol) + "_methylRaw.RDS"] #---- paired end
 
-def bigwig_exporting(files, sampleID, protocol):
+def list_files_bw_export(files, sampleID, protocol):
     PATH = os.path.join(config['locations']['output-dir'], DIR_bigwig )
     if len(files) == 1:
         return  PATH+sampleID+"_se_bt2.sorted" + dedupe_tag(protocol) + ".bw" #---- single end
     elif len(files) == 2:
         return [PATH+sampleID+"_1_val_1_bt2.sorted" + dedupe_tag(protocol) + ".bw"] #---- paired end
 
-def methSeg(files, sampleID, protocol):
-    PATH = DIR_seg
+def list_files_deconv(files, sampleID, protocol):
+    PATH = os.path.join(config['locations']['output-dir'], DIR_deconv )
     if len(files) == 1:
-        return  PATH+sampleID+"_se_bt2.sorted" + dedupe_tag(protocol) + "_meth_segments_gr.RDS" #---- single end
+        return [ PATH+sampleID+"_SE_deconv_vals.csv",   PATH+sampleID+"_SE_deconv_dat.rds" ] #---- single end
     elif len(files) == 2:
-        return [PATH+sampleID+"_1_val_1_bt2.sorted" + dedupe_tag(protocol) + "_meth_segments_gr.RDS"] #---- paired end
-    else:
-        raise Exception("=== ERROR: file list is neither 1 nor 2 in length. STOP! ===")
+        return [ PATH+sampleID+"_PE_deconv_vals.csv",   PATH+sampleID+"_PE_deconv_dat.rds" ] #---- paired end
 
-def list_final_reports(files, sampleID, protocol):
-    PATH = DIR_final
-    if len(files) == 1:
-        return  PATH+sampleID+"_se_bt2.sorted" + dedupe_tag(protocol) + "_"+ASSEMBLY+"_final.html" #---- single end
-    elif len(files) == 2:
-        return [PATH+sampleID+"_1_val_1_bt2.sorted" + dedupe_tag(protocol) + "_"+ASSEMBLY+"_final.html"] #---- paired end
-    else:
-        raise Exception("=== ERROR: file list is neither 1 nor 2 in length. STOP! ===")
-
 def fmt(message):
     """Format the MESSAGE string."""
     return "----------  " + message + "  ----------"
@@ -145,43 +134,6 @@ def get_fastq_name(full_name):
      bail("Unable to infer sample fastq name; cannot find trimming string in filename. \nHave the files been trimmed for adapter sequence and quality?")
 
     return(output)
-
-def get_sampleids_from_treatment(treatment):
-  treatment = treatment.replace(".deduped", "")
-
-  SAMPLE_IDS = list(config["SAMPLES"].keys())
-  SAMPLE_TREATMENTS = [config["SAMPLES"][s]["Treatment"] for s in SAMPLE_IDS]
-
-  treatments = treatment.split("_")
-  sampleids_list = []
-  for t in treatments:
-    sampleids = [SAMPLE_IDS[i] for i, x in enumerate(SAMPLE_TREATMENTS) if x == t]
-    sampleids_list.append(sampleids)
-
-  sampleids_list = list(sum(sampleids_list, []))
-  return(sampleids_list)
-
-def makeDiffMethPath(DIR_diffmeth, suffix, wc):
-    return DIR_diffmeth + str(wc.treatment).replace('vs', '_') + dedupe_tag(config["SAMPLES"][get_sampleids_from_treatment(wc.treatment[0])[0]]['Protocol']) + '_' + suffix
-
-# For only CpG context
-def diffmeth_input_function(wc):
-  treatments = wc.treatment
-  treatments = treatments.replace(".deduped", "")
-  sampleids  = get_sampleids_from_treatment(treatments)
-
-  inputfiles = []
-  for sampleid in sampleids:
-    fqname = config["SAMPLES"][sampleid]['fastq_name']
-    protocol = config["SAMPLES"][sampleid]['Protocol']
-    if len(fqname)==1:
-      inputfile=[os.path.join(DIR_methcall,sampleid+"_se_bt2.sorted" + dedupe_tag(protocol) + "_methylRaw.RDS")]
-    elif len(fqname)==2:
-      inputfile=[os.path.join(DIR_methcall,sampleid+"_1_val_1_bt2.sorted" + dedupe_tag(protocol) + "_methylRaw.RDS")]
-    inputfiles.append(inputfile)
-
-  inputfiles = list(sum(inputfiles, []))
-  return(inputfiles)
 
 def tool(name):
     return config['tools'][name]['executable']
@@ -202,27 +154,6 @@ def nice(cmd, args, log=None):
     return " ".join(line)
 
 # custome function for submitting shell command to generate final reports:
-def generateReport(input, output, params, log, reportSubDir):
-    dumps = json.dumps(dict(params.items()),sort_keys=True,
-                       separators=(",",":"), ensure_ascii=True)
-
-    cmd = nice('Rscript', ["{DIR_scripts}/generate_report.R",
-                           "--scriptsDir=" + DIR_scripts,
-                           "--reportFile={input.template}",
-                           "--outFile={output.report}",
-                           "--finalReportDir=" + os.path.join(DIR_final,reportSubDir),
-                           "--report.params={dumps:q}",
-                           "--logFile={log}"])
-    print("==== The present shell command being submitted by the generateReport function is as follows: ")
-    print(cmd)
-    print("==== ... and the dumps string is : ")
-    print(dumps)
-    print("==== End of dump string.")
-    print("==== The arguments list for the rendering is provided in the *html.RenderArgs.rds file ")
-
-    shell(cmd, dumps)
-
-# abandone current execution with a helpful error message:
 def bail(msg):
     """Print the error message to stderr and exit."""
     print(msg, file=sys.stderr)

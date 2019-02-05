@@ -3,16 +3,19 @@ if &cp | set nocp | endif
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
+cd ~/projects/Cell_type_deconvolution/pigx_bsseq_deconv_fork
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-source dev/foldstyles.vim
 badd +1 pigx-bsseq.in
 badd +0 BSseq_pipeline.py
+badd +32 ~/.vim/foldstyles.vim
+badd +98 scripts/fetch_procedures.R
 badd +0 scripts/func_defs.py
-badd +0 report_templates/index.Rmd.in
-badd +0 report_templates/diffmeth.Rmd.in
+badd +0 config.json
+badd +0 scripts/deconv_from_command_line_main.R
+badd +0 scripts/deconv_funcs.R
 argglobal
 silent! argdel *
 $argadd pigx-bsseq.in
@@ -36,11 +39,11 @@ setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 50 - ((0 * winheight(0) + 18) / 36)
+let s:l = 387 - ((342 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-50
+387
 normal! 0
 wincmd w
 argglobal
@@ -53,19 +56,30 @@ setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 381 - ((182 * winheight(0) + 18) / 36)
+23
+normal! zo
+51
+normal! zo
+201
+normal! zo
+let s:l = 222 - ((19 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-381
-normal! 01|
+222
+normal! 029|
 wincmd w
 2wincmd w
 wincmd =
 tabedit scripts/func_defs.py
 set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
 wincmd t
 set winminheight=1 winheight=1 winminwidth=1 winwidth=1
+wincmd =
 argglobal
 if bufexists('scripts/func_defs.py') | buffer scripts/func_defs.py | else | edit scripts/func_defs.py | endif
 setlocal fdm=expr
@@ -76,13 +90,32 @@ setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 30 - ((23 * winheight(0) + 18) / 36)
+let s:l = 47 - ((23 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
+47
 normal! 0
-tabedit report_templates/index.Rmd.in
+wincmd w
+argglobal
+if bufexists('config.json') | buffer config.json | else | edit config.json | endif
+setlocal fdm=expr
+setlocal fde=FoldPythonFuncdefs()
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+let s:l = 4 - ((3 * winheight(0) + 18) / 36)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+4
+normal! 0
+wincmd w
+wincmd =
+tabedit scripts/deconv_from_command_line_main.R
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -92,38 +125,40 @@ wincmd t
 set winminheight=1 winheight=1 winminwidth=1 winwidth=1
 wincmd =
 argglobal
-if bufexists('report_templates/index.Rmd.in') | buffer report_templates/index.Rmd.in | else | edit report_templates/index.Rmd.in | endif
+if bufexists('scripts/deconv_from_command_line_main.R') | buffer scripts/deconv_from_command_line_main.R | else | edit scripts/deconv_from_command_line_main.R | endif
 setlocal fdm=expr
-setlocal fde=FoldRmarkdown()
+setlocal fde=FoldPythonFuncdefs()
 setlocal fmr={{{,}}}
 setlocal fdi=#
 setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 1 - ((0 * winheight(0) + 18) / 36)
+let s:l = 45 - ((4 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+45
 normal! 0
 wincmd w
 argglobal
-if bufexists('report_templates/diffmeth.Rmd.in') | buffer report_templates/diffmeth.Rmd.in | else | edit report_templates/diffmeth.Rmd.in | endif
+if bufexists('scripts/deconv_funcs.R') | buffer scripts/deconv_funcs.R | else | edit scripts/deconv_funcs.R | endif
 setlocal fdm=expr
-setlocal fde=FoldRmarkdown()
+setlocal fde=RscriptFuncs()
 setlocal fmr={{{,}}}
 setlocal fdi=#
 setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 413 - ((412 * winheight(0) + 18) / 36)
+1
+normal! zo
+let s:l = 38 - ((37 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-413
-normal! 0
+38
+normal! 01|
 wincmd w
 wincmd =
 tabnext 1

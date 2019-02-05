@@ -128,6 +128,11 @@ parser.add_argument('--verbose', dest='verbose', action='store_true',
                     help="""\
 Print supplementary info on job execution.""")
 
+parser.add_argument('--dag', dest='dag', action='store_true',
+                    help="""\
+Print dag showing dependency of job xecution.""")
+
+
 parser.add_argument('--printshellcmds', dest='printshellcmds', action='store_true',
                     help="""\
 Print commands being executed by snakemake.""")
@@ -547,6 +552,8 @@ else:
         command.append("--unlock")
     if args.verbose:
         command.append("--verbose")
+    if args.dag:
+        command.append("--dag")
     if args.printshellcmds:
         command.append("--printshellcmds")
     if args.target and 'help' in args.target:

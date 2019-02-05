@@ -91,8 +91,6 @@ AC_ARG_VAR(PYTHONPATH, The search path for all Python packages)
 
 AC_SUBST([capture_environment])
 AC_CONFIG_FILES([etc/settings.yaml
-                 report_templates/index.Rmd
-                 report_templates/diffmeth.Rmd
                  Makefile
                  qsub-template.sh])
 AC_CONFIG_FILES([test.sh], [chmod +x test.sh])
