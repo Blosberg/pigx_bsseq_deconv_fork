@@ -1,4 +1,5 @@
 (define packages (list 
+"glibc-locales"
 "vim"
 "autoconf"
 "automake"

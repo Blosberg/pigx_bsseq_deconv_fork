@@ -81,7 +81,9 @@ convert_methob_to_Expdat  <- function(methraw_in  = stop("methraw_in must be def
   
   NROI_whits = length(biomarkers_with_hits_GR);
   if ( NROI_whits == 0 )
-     { stop("No biomarkers from the matrix were hit by the experimental reads. No convolution can be performed. Exiting.")}
+  { stop(" =================================
+          \n No biomarkers from the matrix were hit by the experimental reads. No convolution can be performed. Exiting.
+         \n ==================================")}
 
   #--- NOW COMPARE BACK TO ORIGINAL BIOMARKERS TO CHECK WHICH ONES WERE INCLUDED.  
   overlaps_hits_w_original_biomarker <- findOverlaps( biomarkers_with_hits_GR, refdat$biom_GR)

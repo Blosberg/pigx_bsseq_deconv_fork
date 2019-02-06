@@ -1,6 +1,6 @@
 # deconve_from_command_line_main.R
 # Driver script for deconvolution, with input & parameters input as command line options.
-# Copyright Â Bren Osberg, MDC Berlin, started Jan. 2019
+# Copyright ? Bren Osberg, MDC Berlin, started Jan. 2019
 #==================================================================================================
 # source("https://bioconductor.org/biocLite.R")
 # biocLite("methylKit")
@@ -103,8 +103,6 @@ source( paste0(Rdeconv_funcdef_PATH,'deconv_funcs.R') ) ;
  refdat$CT_list       = colnames( refdat$Sigmat )
  #================================================================
  #------------     IMPORT  YOUR SAMPLE DATA:      ----------------
- 
- print(paste("Importing experimental data"))
  
  # Import your raw sample data:
  methraw_ob <- get_single_methraw_ob ( fin             = methylcall_fin,
